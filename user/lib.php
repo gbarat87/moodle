@@ -22,6 +22,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\di;
+use core\hook;
+use core_user\hook\extend_user_menu;
+
 define('USER_FILTER_ENROLMENT', 1);
 define('USER_FILTER_GROUP', 2);
 define('USER_FILTER_LAST_ACCESS', 3);
@@ -906,6 +910,16 @@ function user_get_user_navigation_info($user, $page, $options = array()) {
         $returnobject->navitems[] = $item;
         if ($item->itemtype !== 'divider' && $item->itemtype !== 'invalid') {
             $custommenucount++;
+        }
+    }
+
+    // Call to hook to add menu items.
+    $hook = new extend_user_menu();
+    di::get(core\hook\manager::class)->dispatch($hook);
+    $hookitems = $hook->get_navitems();
+    foreach ($hookitems as $menuitem) {
+        if (property_exists($menuitem, 'itemtype')) {
+            $returnobject->navitems[] = $menuitem;
         }
     }
 
