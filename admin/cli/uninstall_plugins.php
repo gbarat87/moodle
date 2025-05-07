@@ -160,11 +160,11 @@ if ($options['plugins']) {
         } else {
             $pluginstring = $plugin->component . "\t" . $plugin->displayname;
 
-            if ($pluginman->can_uninstall_plugin($plugin->component)) {
+            if ($pluginman->can_uninstall_plugin($component)) {
                 if ($options['run']) {
                     cli_writeln('Uninstalling: ' . $pluginstring);
                     $progress = new progress_trace_buffer(new text_progress_trace(), true);
-                    $pluginman->uninstall_plugin($plugin->component, $progress);
+                    $pluginman->uninstall_plugin($component, $progress);
                     $progress->finished();
                     cli_write($progress->get_buffer());
                 } else {
