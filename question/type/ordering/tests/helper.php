@@ -99,7 +99,6 @@ class qtype_ordering_test_helper extends question_test_helper {
      * @return stdClass the answer.
      */
     public function make_answer(int $id, string $text, int $textformat, int $order, bool $addmd5 = false): stdClass {
-        global $CFG;
 
         $answer = new stdClass();
         $answer->id = $id;
@@ -111,12 +110,7 @@ class qtype_ordering_test_helper extends question_test_helper {
         $answer->feedbackformat = FORMAT_MOODLE;
 
         if ($addmd5) {
-            if (isset($CFG->passwordsaltmain)) {
-                $salt = $CFG->passwordsaltmain;
-            } else {
-                $salt = '';
-            }
-            $answer->md5key = 'ordering_item_' . md5($salt . $answer->answer);
+            $answer->md5key = 'ordering_item_' . md5($answer->answer);
         }
 
         return $answer;
