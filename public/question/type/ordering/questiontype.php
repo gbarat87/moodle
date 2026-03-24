@@ -47,13 +47,12 @@ class qtype_ordering extends question_type {
     }
 
     protected function initialise_question_instance(question_definition $question, $questiondata): void {
-        global $CFG;
 
         parent::initialise_question_instance($question, $questiondata);
 
         $question->answers = $questiondata->options->answers;
         foreach ($question->answers as $answerid => $answer) {
-            $question->answers[$answerid]->md5key = 'ordering_item_' . md5(($CFG->passwordsaltmain ?? '') . $answer->answer);
+            $question->answers[$answerid]->md5key = 'ordering_item_' . md5($answer->answer);
         }
 
         $this->initialise_combined_feedback($question, $questiondata, true);

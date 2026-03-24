@@ -379,5 +379,20 @@ function xmldb_qtype_ordering_upgrade($oldversion) {
     // Automatically generated Moodle v5.1.0 release upgrade line.
     // Put any upgrade step following this.
 
+    if ($oldversion < 2025100601) {
+        // Before MDL-88268, answers for qtype_ordering were stored encrypted with the salted token passwordsaltmain.
+        // Updating this token would break the grading for qtype_ordering as the answers won't match anymore.
+        // This upgrade step creates an adhoc task that will check the passwordsaltmain and convert the existing answers
+        // to a non-salted one.
+        $salt = !empty($CFG->passwordsaltmain) ? (string)$CFG->passwordsaltmain : '';
+        if ($salt !== '' && \qtype_ordering\task\fix_ordering_tokens::has_salted_tokens($salt)) {
+            $task = new \qtype_ordering\task\fix_ordering_tokens();
+            \core\task\manager::queue_adhoc_task($task, true);
+            mtrace('qtype_ordering: salted ordering tokens found. Queued migration adhoc task.');
+        }
+
+        upgrade_plugin_savepoint(true, 2025100601, 'qtype', 'ordering');
+    }
+
     return true;
 }
