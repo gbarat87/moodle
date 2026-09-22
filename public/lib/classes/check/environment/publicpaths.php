@@ -77,6 +77,24 @@ class publicpaths extends check {
                         ['path' => $CFG->dirroot . '/node_modules']),
             ],
             [
+                'pattern'   => '/install/',
+                '404'       => [
+                    'install/',
+                    'install/README.txt',
+                    'install/distribution.html',
+                    'install/welcome.html',
+                    'install/css.php',
+                    'install/stringnames.txt',
+                    'install/lang/',
+                ],
+                'summary'   => get_string('check_installdir_info', 'report_security'),
+                'details'   => get_string(
+                    'check_installdir_details',
+                    'report_security',
+                    ['path' => $CFG->dirroot . '/install']
+                ),
+            ],
+            [
                 'pattern'   => '^\..*',
                 '404'       => [
                     '.git/',
